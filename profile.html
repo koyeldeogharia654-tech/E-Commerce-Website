@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile</title>
+
+
+    <style>
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background: #f5f5f5;
+
+            margin: 0;
+
+            padding: 0;
+
+        }
+
+
+        .header {
+
+            background: #333;
+
+            color: white;
+
+            padding: 20px;
+
+            text-align: center;
+
+        }
+
+
+        .profile-container {
+
+            width: 400px;
+
+            max-width: 90%;
+
+            margin: 40px auto;
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.15);
+
+            text-align: center;
+
+        }
+
+
+        .profile-container img {
+
+            width: 130px;
+
+            height: 130px;
+
+            border-radius: 50%;
+
+            object-fit: cover;
+
+            border: 3px solid #333;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .no-photo {
+
+            width: 130px;
+
+            height: 130px;
+
+            border-radius: 50%;
+
+            background: #ddd;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin: 0 auto 20px;
+
+            font-size: 50px;
+
+        }
+
+
+        .info {
+
+            text-align: left;
+
+            margin-top: 20px;
+
+        }
+
+
+        .info label {
+
+            font-weight: bold;
+
+            display: block;
+
+            margin-top: 15px;
+
+        }
+
+
+        .info input,
+
+        .info textarea {
+
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 10px;
+
+            margin-top: 5px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 6px;
+
+            font-size: 14px;
+
+        }
+
+
+        .info input:focus,
+
+        .info textarea:focus {
+
+            outline: none;
+
+            border-color: #333;
+
+        }
+
+
+        .info textarea {
+
+            height: 80px;
+
+            resize: none;
+
+        }
+
+
+        .success {
+
+            background: #d4edda;
+
+            color: #155724;
+
+            border: 1px solid #c3e6cb;
+
+            padding: 10px;
+
+            border-radius: 6px;
+
+            margin-bottom: 15px;
+
+            text-align: center;
+
+        }
+
+
+        .error {
+
+            background: #f8d7da;
+
+            color: #721c24;
+
+            border: 1px solid #f5c6cb;
+
+            padding: 10px;
+
+            border-radius: 6px;
+
+            margin-bottom: 15px;
+
+            text-align: center;
+
+        }
+
+
+        button {
+
+            margin-top: 20px;
+
+            width: 100%;
+
+            padding: 12px;
+
+            background: #333;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-size: 16px;
+
+        }
+
+
+        button:hover {
+
+            background: #555;
+
+        }
+
+
+        .back {
+
+            display: inline-block;
+
+            margin-top: 15px;
+
+            text-decoration: none;
+
+            color: #333;
+
+        }
+
+
+        .back:hover {
+
+            text-decoration: underline;
+
+        }
+
+
+        .photo-note {
+
+            font-size: 12px;
+
+            color: #777;
+
+            margin-top: 5px;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ==================================================
+         HEADER
+         ================================================== -->
+
+    <div class="header">
+
+        <h1>My Profile</h1>
+
+    </div>
+
+
+    <!-- ==================================================
+         PROFILE CONTAINER
+         ================================================== -->
+
+    <div class="profile-container">
+
+
+        <!-- ==================================================
+             SUCCESS MESSAGE
+             ================================================== -->
+
+        {% if success %}
+
+            <div class="success">
+
+                {{ success }}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- ==================================================
+             ERROR MESSAGE
+             ================================================== -->
+
+        {% if error %}
+
+            <div class="error">
+
+                {{ error }}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- ==================================================
+             PROFILE PHOTO
+             ================================================== -->
+
+        {% if user["photo"] %}
+
+            <img
+                src="{{ url_for('static', filename='uploads/' + user['photo']) }}"
+                alt="Profile Photo"
+            >
+
+        {% else %}
+
+            <div class="no-photo">
+
+                👤
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- ==================================================
+             PROFILE FORM
+             ================================================== -->
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+
+            <div class="info">
+
+
+                <!-- ==================================================
+                     USERNAME
+                     ================================================== -->
+
+                <label for="username">
+
+                    Username
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    value="{{ user['username'] }}"
+                    placeholder="Enter username"
+                    required
+                >
+
+
+                <!-- ==================================================
+                     EMAIL
+                     ================================================== -->
+
+                <label for="email">
+
+                    Email
+
+                </label>
+
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value="{{ user['email'] }}"
+                    placeholder="Enter email"
+                    required
+                >
+
+
+                <!-- ==================================================
+                     ADDRESS
+                     ================================================== -->
+
+                <label for="address">
+
+                    Address
+
+                </label>
+
+
+                <textarea
+                    id="address"
+                    name="address"
+                    placeholder="Enter your address"
+                >{{ user['address'] or '' }}</textarea>
+
+
+                <!-- ==================================================
+                     PROFILE PHOTO
+                     ================================================== -->
+
+                <label for="photo">
+
+                    Profile Photo
+
+                </label>
+
+
+                <input
+                    type="file"
+                    id="photo"
+                    name="photo"
+                    accept=".jpg,.jpeg,.png,.gif,.webp"
+                >
+
+
+                <div class="photo-note">
+
+                    JPG, JPEG, PNG, GIF or WEBP
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ==================================================
+                 SAVE BUTTON
+                 ================================================== -->
+
+            <button type="submit">
+
+                Save Profile
+
+            </button>
+
+
+        </form>
+
+
+        <!-- ==================================================
+             BACK TO HOME
+             ================================================== -->
+
+        <a
+            class="back"
+            href="{{ url_for('home') }}"
+        >
+
+            ← Back to Home
+
+        </a>
+
+
+    </div>
+
+
+</body>
+
+</html>

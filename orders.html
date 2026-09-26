@@ -1,0 +1,950 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Orders - My E-Commerce Website</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #222;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0 0 15px 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 16px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .order-card {
+            background-color: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        .order-header {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .order-id {
+            font-size: 20px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .status {
+            display: inline-block;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .cancelled-status {
+            display: inline-block;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .details {
+            margin-top: 10px;
+        }
+
+        .details p {
+            margin: 8px 0;
+        }
+
+        /* ==========================================
+           ORDER DATE / DELIVERY DATE
+        ========================================== */
+
+        .date-box {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .date-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .date-row:last-child {
+            border-bottom: none;
+        }
+
+        .date-label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .date-value {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .delivery-date {
+            color: #28a745;
+        }
+
+        .delivered-date {
+            color: #6f42c1;
+        }
+
+        /* ==========================================
+           ORDERED ITEMS
+        ========================================== */
+
+        .items {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+        }
+
+        .items h3 {
+            margin-top: 0;
+        }
+
+        .item {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .total {
+            text-align: right;
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        /* ==========================================
+           ORDER TRACKING
+        ========================================== */
+
+        .tracking {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #fafafa;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .tracking h3 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .tracking-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 30px 5px 15px 5px;
+        }
+
+        .tracking-container::before {
+            content: "";
+            position: absolute;
+            top: 15px;
+            left: 5%;
+            right: 5%;
+            height: 4px;
+            background-color: #ddd;
+            z-index: 0;
+        }
+
+        .tracking-step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            width: 20%;
+        }
+
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            margin: auto;
+            border-radius: 50%;
+            background-color: #ddd;
+            color: white;
+            font-weight: bold;
+        }
+
+        .tracking-step.completed .step-circle {
+            background-color: #28a745;
+        }
+
+        .tracking-step.current .step-circle {
+            background-color: #007bff;
+            box-shadow: 0 0 0 5px rgba(0,123,255,0.15);
+        }
+
+        .step-label {
+            margin-top: 10px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .tracking-step.completed .step-label {
+            color: #28a745;
+        }
+
+        .tracking-step.current .step-label {
+            color: #007bff;
+        }
+
+        .cancelled-tracking {
+            text-align: center;
+            padding: 15px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        /* ==========================================
+           CANCEL BUTTON
+        ========================================== */
+
+        .cancel-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background-color: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cancel-button:hover {
+            background-color: #c82333;
+        }
+
+        /* ==========================================
+           RETURN SYSTEM
+        ========================================== */
+
+        .return-box {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #fff8e1;
+            border: 1px solid #ffc107;
+            border-radius: 10px;
+        }
+
+        .return-box h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+
+        .return-info {
+            margin: 8px 0;
+        }
+
+        .return-button {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 12px 20px;
+            background-color: #ff9800;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .return-button:hover {
+            background-color: #e68900;
+        }
+
+        .return-pending {
+            margin-top: 12px;
+            padding: 12px;
+            background-color: #fff3cd;
+            color: #856404;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .return-approved {
+            margin-top: 12px;
+            padding: 12px;
+            background-color: #d4edda;
+            color: #155724;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .return-rejected {
+            margin-top: 12px;
+            padding: 12px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .return-expired {
+            margin-top: 12px;
+            padding: 12px;
+            background-color: #eeeeee;
+            color: #555;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        /* ==========================================
+           EMPTY ORDERS
+        ========================================== */
+
+        .empty {
+            background-color: white;
+            text-align: center;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        /* ==========================================
+           MOBILE RESPONSIVE
+        ========================================== */
+
+        @media (max-width: 600px) {
+
+            .container {
+                width: 94%;
+            }
+
+            .order-card {
+                padding: 18px;
+            }
+
+            .tracking-container {
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .step-label {
+                font-size: 9px;
+            }
+
+            .step-circle {
+                width: 25px;
+                height: 25px;
+                line-height: 25px;
+                font-size: 12px;
+            }
+
+            .tracking-container::before {
+                top: 12px;
+            }
+
+            .date-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ==========================================
+         HEADER
+    ========================================== -->
+
+    <header>
+
+        <h1>
+            My E-Commerce Website
+        </h1>
+
+        <nav>
+
+            <a href="{{ url_for('home') }}">
+                Home
+            </a>
+
+            <a href="{{ url_for('cart') }}">
+                🛒 Cart
+            </a>
+
+            <a href="{{ url_for('orders') }}">
+                📦 My Orders
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- ==========================================
+         MAIN
+    ========================================== -->
+
+    <div class="container">
+
+        <h2>
+            📦 My Orders
+        </h2>
+
+
+        {% if orders %}
+
+
+            {% for order in orders %}
+
+                <div class="order-card">
+
+
+                    <!-- ==========================================
+                         ORDER HEADER
+                    ========================================== -->
+
+                    <div class="order-header">
+
+                        <div class="order-id">
+
+                            Order ID:
+
+                            {{ order["order_id"] }}
+
+                        </div>
+
+
+                        <!-- ==========================================
+                             CURRENT STATUS
+                        ========================================== -->
+
+                        {% if order["status"] == "Cancelled" %}
+
+                            <div class="cancelled-status">
+
+                                ❌ Cancelled
+
+                            </div>
+
+                        {% else %}
+
+                            <div class="status">
+
+                                📦 {{ order["status"] }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- ==========================================
+                         ORDER DATE / EXPECTED DELIVERY DATE
+                    ========================================== -->
+
+                    <div class="date-box">
+
+                        <div class="date-row">
+
+                            <span class="date-label">
+                                📅 Order Date:
+                            </span>
+
+                            <span class="date-value">
+
+                                {{ order["order_date"] if order["order_date"] else "Not Available" }}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="date-row">
+
+                            <span class="date-label">
+                                🚚 Expected Delivery:
+                            </span>
+
+                            <span class="date-value delivery-date">
+
+                                {{ order["delivery_date"] if order["delivery_date"] else "Not Available" }}
+
+                            </span>
+
+                        </div>
+
+
+                        {% if order["status"] == "Delivered" %}
+
+                            <div class="date-row">
+
+                                <span class="date-label">
+                                    ✅ Delivered Date:
+                                </span>
+
+                                <span class="date-value delivered-date">
+
+                                    {{ order["delivered_date"] if order["delivered_date"] else order["delivery_date"] }}
+
+                                </span>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- ==========================================
+                         CUSTOMER DETAILS
+                    ========================================== -->
+
+                    <div class="details">
+
+                        <h3>
+                            👤 Customer Details
+                        </h3>
+
+                        <p>
+                            <strong>Name:</strong>
+                            {{ order["name"] }}
+                        </p>
+
+                        <p>
+                            <strong>Address:</strong>
+                            {{ order["address"] }}
+                        </p>
+
+                        <p>
+                            <strong>Phone:</strong>
+                            {{ order["phone"] }}
+                        </p>
+
+                        <p>
+                            <strong>Payment Method:</strong>
+                            {{ order["payment_method"] }}
+                        </p>
+
+                    </div>
+
+
+                    <!-- ==========================================
+                         ORDERED ITEMS
+                    ========================================== -->
+
+                    <div class="items">
+
+                        <h3>
+                            🛍️ Ordered Items
+                        </h3>
+
+
+                        {% if order["items"] %}
+
+                            {% for item in order["items"] %}
+
+                                <div class="item">
+
+                                    <strong>
+                                        {{ item["name"] }}
+                                    </strong>
+
+                                    <br>
+
+                                    Quantity:
+                                    {{ item["quantity"] }}
+
+                                    <br>
+
+                                    Subtotal:
+                                    ₹{{ item["subtotal"] }}
+
+                                </div>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <div class="item">
+                                No item information available.
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- ==========================================
+                         TOTAL
+                    ========================================== -->
+
+                    <div class="total">
+
+                        Total:
+                        ₹{{ order["total"] }}
+
+                    </div>
+
+
+                    <!-- ==========================================
+                         ORDER TRACKING
+                    ========================================== -->
+
+                    {% if order["status"] == "Cancelled" %}
+
+                        <div class="tracking">
+
+                            <div class="cancelled-tracking">
+
+                                ❌ This order has been cancelled.
+
+                            </div>
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="tracking">
+
+                            <h3>
+                                📦 Order Tracking
+                            </h3>
+
+
+                            {% set tracking_steps = [
+                                "Order Placed",
+                                "Processing",
+                                "Shipped",
+                                "Out for Delivery",
+                                "Delivered"
+                            ] %}
+
+
+                            {% set current_index = tracking_steps.index(order["status"])
+                                if order["status"] in tracking_steps
+                                else 0 %}
+
+
+                            <div class="tracking-container">
+
+
+                                {% for step in tracking_steps %}
+
+                                    {% set step_index = loop.index0 %}
+
+
+                                    <div class="tracking-step
+                                        {% if step_index < current_index %}
+                                            completed
+                                        {% elif step_index == current_index %}
+                                            current
+                                        {% endif %}
+                                    ">
+
+                                        <div class="step-circle">
+
+                                            {% if step_index < current_index %}
+
+                                                ✓
+
+                                            {% elif step_index == current_index %}
+
+                                                {{ loop.index }}
+
+                                            {% else %}
+
+                                                {{ loop.index }}
+
+                                            {% endif %}
+
+                                        </div>
+
+
+                                        <div class="step-label">
+
+                                            {{ step }}
+
+                                        </div>
+
+                                    </div>
+
+                                {% endfor %}
+
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- ==========================================
+                         RETURN SYSTEM
+                    ========================================== -->
+
+                    {% if order["status"] == "Delivered" %}
+
+                        <div class="return-box">
+
+                            <h3>
+                                🔄 Return Order
+                            </h3>
+
+
+                            {% if order["return_status"] == "Pending" %}
+
+                                <div class="return-pending">
+
+                                    ⏳ Return request is pending.
+
+                                    {% if order["return_reason"] %}
+
+                                        <br><br>
+
+                                        <strong>Reason:</strong>
+                                        {{ order["return_reason"] }}
+
+                                    {% endif %}
+
+                                </div>
+
+
+                            {% elif order["return_status"] == "Approved" %}
+
+                                <div class="return-approved">
+
+                                    ✅ Your return request has been approved.
+
+                                    {% if order["return_decision_date"] %}
+
+                                        <br>
+
+                                        Decision Date:
+                                        {{ order["return_decision_date"] }}
+
+                                    {% endif %}
+
+                                </div>
+
+
+                            {% elif order["return_status"] == "Rejected" %}
+
+                                <div class="return-rejected">
+
+                                    ❌ Your return request has been rejected.
+
+                                    {% if order["return_reason"] %}
+
+                                        <br><br>
+
+                                        <strong>Reason:</strong>
+                                        {{ order["return_reason"] }}
+
+                                    {% endif %}
+
+                                </div>
+
+
+                            {% elif order["return_allowed"] %}
+
+                                <p class="return-info">
+
+                                    You can return this order within
+                                    <strong>7 days</strong>
+                                    after delivery.
+
+                                </p>
+
+
+                                {% if order["return_deadline"] %}
+
+                                    <p class="return-info">
+
+                                        <strong>
+                                            Return Deadline:
+                                        </strong>
+
+                                        {{ order["return_deadline"] }}
+
+                                    </p>
+
+                                {% endif %}
+
+
+                                <a
+                                    href="{{ url_for('return_order', order_id=order['order_id']) }}"
+                                    class="return-button"
+                                >
+
+                                    🔄 Return Order
+
+                                </a>
+
+
+                            {% else %}
+
+                                <div class="return-expired">
+
+                                    ⏰ Return period has expired.
+
+                                    <br>
+
+                                    Return is available only within
+                                    7 days after delivery.
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- ==========================================
+                         CANCEL ORDER
+                    ========================================== -->
+
+                    {% if order["status"] not in ["Delivered", "Cancelled"] %}
+
+                        <form
+                            action="{{ url_for('cancel_order', order_id=order['order_id']) }}"
+                            method="POST"
+                            onsubmit="return confirm('Are you sure you want to cancel this order?');"
+                        >
+
+                            <button
+                                type="submit"
+                                class="cancel-button"
+                            >
+
+                                ❌ Cancel Order
+
+                            </button>
+
+                        </form>
+
+                    {% endif %}
+
+
+                </div>
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <!-- ==========================================
+                 NO ORDERS
+            ========================================== -->
+
+            <div class="empty">
+
+                <h3>
+                    📦 No Orders Found
+                </h3>
+
+                <p>
+                    You have not placed any orders yet.
+                </p>
+
+                <a
+                    href="{{ url_for('home') }}"
+                    class="button"
+                >
+
+                    🛍️ Start Shopping
+
+                </a>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+</body>
+
+</html>
+```

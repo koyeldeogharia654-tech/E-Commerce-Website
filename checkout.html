@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Checkout - My E-Commerce Website</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #222;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0 0 15px 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 700px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin-top: 7px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .order-summary {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+
+        .order-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .total {
+            text-align: right;
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .payment-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+        }
+
+        .place-order {
+            width: 100%;
+            padding: 14px;
+            margin-top: 25px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .place-order:hover {
+            background-color: #218838;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .success {
+            text-align: center;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 25px;
+            border-radius: 8px;
+        }
+
+        .success h2 {
+            color: #155724;
+        }
+
+        .order-id {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: white;
+            border: 2px dashed #28a745;
+            border-radius: 8px;
+            font-size: 20px;
+        }
+
+        .order-details {
+            text-align: left;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+        }
+
+        .order-details p {
+            margin: 10px 0;
+        }
+
+        .cod {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #fff3cd;
+            color: #856404;
+            border-radius: 5px;
+        }
+
+        .payment-message {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #e7f3ff;
+            color: #004085;
+            border-radius: 5px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <header>
+
+        <h1>My E-Commerce Website</h1>
+
+        <nav>
+
+            <a href="{{ url_for('home') }}">
+                Home
+            </a>
+
+            <a href="{{ url_for('cart') }}">
+                🛒 Cart
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <div class="container">
+
+
+        {% if success %}
+
+            <!-- ========================================= -->
+            <!-- ORDER SUCCESS -->
+            <!-- ========================================= -->
+
+            <div class="success">
+
+                <h2>
+                    🎉 Order Placed Successfully!
+                </h2>
+
+
+                <p>
+                    Thank you, <strong>{{ name }}</strong>!
+                </p>
+
+
+                <!-- ORDER ID -->
+
+                <div class="order-id">
+
+                    <strong>
+                        Order ID
+                    </strong>
+
+                    <br>
+
+                    {{ order_id }}
+
+                </div>
+
+
+                <p>
+                    Your order has been placed successfully.
+                </p>
+
+
+                <!-- ORDER DETAILS -->
+
+                <div class="order-details">
+
+                    <h3>
+                        📦 Order Details
+                    </h3>
+
+
+                    <p>
+                        <strong>Name:</strong>
+                        {{ name }}
+                    </p>
+
+
+                    <p>
+                        <strong>Address:</strong>
+                        {{ address }}
+                    </p>
+
+
+                    <p>
+                        <strong>Phone:</strong>
+                        {{ phone }}
+                    </p>
+
+
+                    <p>
+                        <strong>Payment Method:</strong>
+                        {{ payment_method }}
+                    </p>
+
+
+                    <p>
+                        <strong>Total Amount:</strong>
+                        ₹{{ total }}
+                    </p>
+
+
+                    <!-- COD MESSAGE -->
+
+                    {% if payment_method == "Cash on Delivery" %}
+
+                        <div class="cod">
+
+                            💵
+                            <strong>Cash on Delivery</strong>
+
+                            <br><br>
+
+                            Please pay
+                            <strong>₹{{ total }}</strong>
+                            when your order is delivered.
+
+                        </div>
+
+
+                    <!-- UPI MESSAGE -->
+
+                    {% elif payment_method == "UPI" %}
+
+                        <div class="payment-message">
+
+                            📱
+                            <strong>UPI Payment Selected</strong>
+
+                            <br><br>
+
+                            UPI payment option has been selected.
+
+                        </div>
+
+
+                    <!-- CARD MESSAGE -->
+
+                    {% elif payment_method == "Credit/Debit Card" %}
+
+                        <div class="payment-message">
+
+                            💳
+                            <strong>Credit/Debit Card Selected</strong>
+
+                            <br><br>
+
+                            Card payment option has been selected.
+
+                        </div>
+
+
+                    <!-- NET BANKING MESSAGE -->
+
+                    {% elif payment_method == "Net Banking" %}
+
+                        <div class="payment-message">
+
+                            🏦
+                            <strong>Net Banking Selected</strong>
+
+                            <br><br>
+
+                            Net Banking payment option has been selected.
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <br>
+
+
+                <a
+                    href="{{ url_for('home') }}"
+                    class="back"
+                >
+
+                    🛍️ Continue Shopping
+
+                </a>
+
+
+                <br>
+
+
+                <a
+                    href="{{ url_for('orders') }}"
+                    class="back"
+                >
+
+                    📦 My Orders
+
+                </a>
+
+            </div>
+
+
+        {% else %}
+
+
+            <!-- ========================================= -->
+            <!-- CHECKOUT FORM -->
+            <!-- ========================================= -->
+
+            <h2>
+                Checkout
+            </h2>
+
+
+            <!-- ERROR MESSAGE -->
+
+            {% if error %}
+
+                <div class="error">
+
+                    {{ error }}
+
+                </div>
+
+            {% endif %}
+
+
+            <form
+                action="{{ url_for('checkout') }}"
+                method="POST"
+            >
+
+
+                <!-- NAME -->
+
+                <label>
+                    Name
+                </label>
+
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Enter your name"
+                    required
+                >
+
+
+                <!-- ADDRESS -->
+
+                <label>
+                    Address
+                </label>
+
+                <textarea
+                    name="address"
+                    placeholder="Enter your full address"
+                    required
+                ></textarea>
+
+
+                <!-- PHONE -->
+
+                <label>
+                    Phone Number
+                </label>
+
+                <input
+                    type="tel"
+                    name="phone"
+                    placeholder="Enter your phone number"
+                    required
+                >
+
+
+                <!-- PAYMENT METHOD -->
+
+                <div class="payment-box">
+
+                    <label>
+                        Payment Method
+                    </label>
+
+
+                    <select
+                        name="payment_method"
+                        required
+                    >
+
+                        <option value="Cash on Delivery">
+                            💵 Cash on Delivery
+                        </option>
+
+
+                        <option value="UPI">
+                            📱 UPI
+                        </option>
+
+
+                        <option value="Credit/Debit Card">
+                            💳 Credit/Debit Card
+                        </option>
+
+
+                        <option value="Net Banking">
+                            🏦 Net Banking
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- ORDER SUMMARY -->
+
+                <div class="order-summary">
+
+                    <h3>
+                        🛒 Order Summary
+                    </h3>
+
+
+                    {% if cart_items %}
+
+                        {% for item in cart_items %}
+
+                            <div class="order-item">
+
+                                <strong>
+                                    {{ item.name }}
+                                </strong>
+
+                                ×
+
+                                {{ item.quantity }}
+
+                                -
+
+                                ₹{{ item.subtotal }}
+
+                            </div>
+
+                        {% endfor %}
+
+
+                        <div class="total">
+
+                            Total:
+                            ₹{{ total }}
+
+                        </div>
+
+
+                    {% else %}
+
+                        <p>
+                            Your cart is empty.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- PLACE ORDER BUTTON -->
+
+                {% if cart_items %}
+
+                    <button
+                        type="submit"
+                        class="place-order"
+                    >
+
+                        🛍️ Place Order
+
+                    </button>
+
+                {% endif %}
+
+
+            </form>
+
+
+            <!-- BACK TO CART -->
+
+            <a
+                href="{{ url_for('cart') }}"
+                class="back"
+            >
+
+                ← Back to Cart
+
+            </a>
+
+
+        {% endif %}
+
+
+    </div>
+
+</body>
+
+</html>

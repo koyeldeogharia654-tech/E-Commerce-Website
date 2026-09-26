@@ -1,0 +1,587 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ product.name }} - Product Details</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f5f5f5;
+            color: #222;
+        }
+
+        /* HEADER */
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0 0 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* MAIN CONTAINER */
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 40px auto;
+        }
+
+        /* PRODUCT DETAILS */
+
+        .product-details {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .product-icon {
+            font-size: 100px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .product-name {
+            text-align: center;
+            font-size: 35px;
+            margin-bottom: 15px;
+        }
+
+        .description {
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .price {
+            text-align: center;
+            color: green;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 25px 0;
+        }
+
+        /* RATING */
+
+        .rating {
+            text-align: center;
+            color: #f5a623;
+            font-size: 25px;
+            margin: 15px 0;
+        }
+
+        .rating-number {
+            color: #555;
+            font-size: 18px;
+        }
+
+        .review-count {
+            text-align: center;
+            color: #777;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        /* BUTTONS */
+
+        .buttons {
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            margin: 5px;
+            border-radius: 7px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cart-btn {
+            background-color: #007bff;
+        }
+
+        .cart-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .home-btn {
+            background-color: #555;
+        }
+
+        .home-btn:hover {
+            background-color: #333;
+        }
+
+        /* REVIEWS */
+
+        .reviews {
+            margin-top: 35px;
+            border-top: 2px solid #ddd;
+            padding-top: 25px;
+        }
+
+        .reviews h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .review {
+            background-color: #f8f8f8;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+
+        .review-name {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .review-rating {
+            color: #f5a623;
+            margin-bottom: 5px;
+        }
+
+        .review-comment {
+            color: #555;
+        }
+
+        /* ADD REVIEW */
+
+        .add-review {
+            margin-top: 35px;
+            padding: 25px;
+            background-color: #f8f8f8;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .add-review h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .review-form {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .review-form label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .review-form select,
+        .review-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 16px;
+        }
+
+        .review-form textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-review {
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 7px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .submit-review:hover {
+            background-color: #218838;
+        }
+
+        .login-message {
+            text-align: center;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .login-message a {
+            color: #007bff;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        /* FOOTER */
+
+        footer {
+            margin-top: 50px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<header>
+
+    <h1>🛒 My E-Commerce Website</h1>
+
+    <nav>
+
+        <a href="/">🏠 Home</a>
+
+        <a href="/cart">🛒 Cart</a>
+
+        {% if session.get("username") %}
+
+            <a href="/orders">📦 My Orders</a>
+
+            <a href="/wishlist">❤️ Wishlist</a>
+
+            <a href="/logout">🚪 Logout</a>
+
+        {% else %}
+
+            <a href="/login">🔐 Login</a>
+
+            <a href="/signup">📝 Signup</a>
+
+        {% endif %}
+
+    </nav>
+
+</header>
+
+
+
+<!-- MAIN -->
+
+<div class="container">
+
+
+    <div class="product-details">
+
+
+        <!-- PRODUCT ICON -->
+
+        {% if product.name == "Smartphone" %}
+
+            <div class="product-icon">📱</div>
+
+        {% elif product.name == "Laptop" %}
+
+            <div class="product-icon">💻</div>
+
+        {% elif product.name == "Headphones" %}
+
+            <div class="product-icon">🎧</div>
+
+        {% else %}
+
+            <div class="product-icon">🛍️</div>
+
+        {% endif %}
+
+
+
+        <!-- PRODUCT NAME -->
+
+        <h1 class="product-name">
+
+            {{ product.name }}
+
+        </h1>
+
+
+
+        <!-- DESCRIPTION -->
+
+        <p class="description">
+
+            {{ product.description }}
+
+        </p>
+
+
+
+        <!-- PRICE -->
+
+        <div class="price">
+
+            ₹{{ "{:,}".format(product.price) }}
+
+        </div>
+
+
+
+        <!-- RATING -->
+
+        <div class="rating">
+
+            ⭐⭐⭐⭐⭐
+
+            <span class="rating-number">
+
+                {{ product.rating }}/5
+
+            </span>
+
+        </div>
+
+
+
+        <!-- REVIEW COUNT -->
+
+        <div class="review-count">
+
+            {{ product.reviews|length }} Customer Reviews
+
+        </div>
+
+
+
+        <!-- BUTTONS -->
+
+        <div class="buttons">
+
+            <a
+                class="btn cart-btn"
+                href="{{ url_for('add_to_cart', product_id=product.id) }}"
+            >
+
+                🛒 Add to Cart
+
+            </a>
+
+
+            <a
+                class="btn home-btn"
+                href="{{ url_for('home') }}"
+            >
+
+                🏠 Back to Home
+
+            </a>
+
+        </div>
+
+
+
+        <!-- CUSTOMER REVIEWS -->
+
+        <div class="reviews">
+
+            <h2>⭐ Customer Reviews</h2>
+
+
+            {% if product.reviews %}
+
+
+                {% for review in product.reviews %}
+
+                    <div class="review">
+
+                        <div class="review-name">
+
+                            👤 {{ review.name }}
+
+                        </div>
+
+                        <div class="review-rating">
+
+                            ⭐ {{ review.rating }}/5
+
+                        </div>
+
+                        <div class="review-comment">
+
+                            {{ review.comment }}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+
+            {% else %}
+
+                <p style="text-align:center; color:#777;">
+
+                    No reviews available yet.
+
+                </p>
+
+            {% endif %}
+
+
+        </div>
+
+
+
+        <!-- ADD REVIEW -->
+
+        <div class="add-review">
+
+            <h2>✍️ Write a Review</h2>
+
+
+            {% if session.get("username") %}
+
+                <form
+                    class="review-form"
+                    action="{{ url_for('add_review', product_id=product.id) }}"
+                    method="POST"
+                >
+
+                    <!-- RATING -->
+
+                    <label for="rating">
+
+                        ⭐ Your Rating
+
+                    </label>
+
+                    <select
+                        name="rating"
+                        id="rating"
+                        required
+                    >
+
+                        <option value="">Select Rating</option>
+
+                        <option value="5">⭐⭐⭐⭐⭐ - 5/5</option>
+
+                        <option value="4">⭐⭐⭐⭐ - 4/5</option>
+
+                        <option value="3">⭐⭐⭐ - 3/5</option>
+
+                        <option value="2">⭐⭐ - 2/5</option>
+
+                        <option value="1">⭐ - 1/5</option>
+
+                    </select>
+
+
+                    <!-- COMMENT -->
+
+                    <label for="comment">
+
+                        📝 Your Review
+
+                    </label>
+
+                    <textarea
+                        name="comment"
+                        id="comment"
+                        placeholder="Write your review here..."
+                        required
+                    ></textarea>
+
+
+                    <!-- SUBMIT -->
+
+                    <button
+                        type="submit"
+                        class="submit-review"
+                    >
+
+                        ⭐ Submit Review
+
+                    </button>
+
+                </form>
+
+
+            {% else %}
+
+                <p class="login-message">
+
+                    Please
+                    <a href="{{ url_for('login') }}">
+                        login
+                    </a>
+
+                    to write a review.
+
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <p>
+
+        © 2026 My E-Commerce Website
+
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>
+```

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Shopping Cart</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #444;
+            padding: 12px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 30px auto;
+        }
+
+        .cart-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .product-image {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-info h2 {
+            margin-top: 0;
+        }
+
+        .price {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .quantity a {
+            background-color: #333;
+            color: white;
+            text-decoration: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+
+        .quantity span {
+            font-size: 18px;
+            font-weight: bold;
+            min-width: 25px;
+            text-align: center;
+        }
+
+        .subtotal {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .remove {
+            display: inline-block;
+            margin-top: 12px;
+            color: red;
+            text-decoration: none;
+        }
+
+        .total-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: right;
+        }
+
+        .total {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 20px;
+            margin: 8px 5px;
+            background-color: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .checkout {
+            background-color: green;
+        }
+
+        .clear {
+            background-color: red;
+        }
+
+        .empty {
+            background-color: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>My E-Commerce Website</h1>
+
+</header>
+
+
+<nav>
+
+    <a href="{{ url_for('home') }}">Home</a>
+
+    <a href="{{ url_for('cart') }}">Cart</a>
+
+</nav>
+
+
+<div class="container">
+
+
+    {% if cart_items %}
+
+
+        {% for item in cart_items %}
+
+        <div class="cart-item">
+
+
+            <img
+                src="{{ url_for('static', filename='images/' + item.image) }}"
+                alt="{{ item.name }}"
+                class="product-image"
+            >
+
+
+            <div class="product-info">
+
+                <h2>{{ item.name }}</h2>
+
+                <p class="price">
+                    Price: ₹{{ item.price }}
+                </p>
+
+
+                <div class="quantity">
+
+                    <strong>Quantity:</strong>
+
+                    <a href="{{ url_for('update_cart', product_id=item.id, action='decrease') }}">
+                        −
+                    </a>
+
+                    <span>
+                        {{ item.quantity }}
+                    </span>
+
+                    <a href="{{ url_for('update_cart', product_id=item.id, action='increase') }}">
+                        +
+                    </a>
+
+                </div>
+
+
+                <p class="subtotal">
+                    Subtotal: ₹{{ item.subtotal }}
+                </p>
+
+
+                <a
+                    href="{{ url_for('remove_from_cart', product_id=item.id) }}"
+                    class="remove"
+                >
+                    Remove
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+        {% endfor %}
+
+
+        <div class="total-box">
+
+            <p class="total">
+                Total: ₹{{ total }}
+            </p>
+
+
+            <a
+                href="{{ url_for('clear_cart') }}"
+                class="button clear"
+            >
+                Clear Cart
+            </a>
+
+
+            <a
+                href="{{ url_for('checkout') }}"
+                class="button checkout"
+            >
+                Proceed to Checkout
+            </a>
+
+        </div>
+
+
+    {% else %}
+
+
+        <div class="empty">
+
+            <h2>Your Cart is Empty</h2>
+
+            <p>Add some products to your cart.</p>
+
+            <a
+                href="{{ url_for('home') }}"
+                class="button"
+            >
+                Continue Shopping
+            </a>
+
+        </div>
+
+
+    {% endif %}
+
+
+</div>
+
+
+</body>
+
+</html>

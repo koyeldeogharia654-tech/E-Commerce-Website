@@ -1,0 +1,324 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Orders</title>
+
+<style>
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f5f5f5;
+}
+
+header {
+    background-color: #222;
+    color: white;
+    padding: 25px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0 0 15px 0;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.container {
+    width: 92%;
+    max-width: 1100px;
+    margin: 30px auto;
+}
+
+.order-card {
+    background-color: white;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+}
+
+.order-id {
+    color: #0056b3;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.status {
+    display: inline-block;
+    padding: 8px 14px;
+    margin: 12px 0;
+    border-radius: 5px;
+    background-color: #d9edf7;
+    font-weight: bold;
+}
+
+.details {
+    line-height: 1.8;
+}
+
+.items {
+    background-color: #f7f7f7;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+}
+
+.item {
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.item:last-child {
+    border-bottom: none;
+}
+
+.total {
+    text-align: right;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.status-form {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+button {
+    padding: 10px 18px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.logout {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 15px;
+    background-color: #dc3545;
+    border-radius: 5px;
+}
+
+.no-orders {
+    background-color: white;
+    padding: 30px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>🛠️ Admin Panel</h1>
+
+<nav>
+
+<a href="{{ url_for('home') }}">
+Home
+</a>
+
+<a href="{{ url_for('admin_logout') }}" class="logout">
+Logout
+</a>
+
+</nav>
+
+</header>
+
+
+<div class="container">
+
+<h2>📦 All Orders</h2>
+
+
+{% if orders %}
+
+{% for order in orders %}
+
+<div class="order-card">
+
+
+<div class="order-id">
+
+Order ID: {{ order['order_id'] }}
+
+</div>
+
+
+<div class="status">
+
+📌 Current Status:
+{{ order['status'] }}
+
+</div>
+
+
+<div class="details">
+
+<strong>Username:</strong>
+{{ order['username'] }}
+
+<br>
+
+<strong>Name:</strong>
+{{ order['name'] }}
+
+<br>
+
+<strong>Address:</strong>
+{{ order['address'] }}
+
+<br>
+
+<strong>Phone:</strong>
+{{ order['phone'] }}
+
+<br>
+
+<strong>Payment Method:</strong>
+{{ order['payment_method'] }}
+
+</div>
+
+
+<div class="items">
+
+<h3>🛒 Ordered Items</h3>
+
+
+{% for item in order['items'] %}
+
+<div class="item">
+
+<strong>
+{{ item['name'] }}
+</strong>
+
+× {{ item['quantity'] }}
+
+-
+
+₹{{ item['subtotal'] }}
+
+</div>
+
+{% endfor %}
+
+
+<div class="total">
+
+Total: ₹{{ order['total'] }}
+
+</div>
+
+</div>
+
+
+<!-- ==========================================
+     UPDATE ORDER STATUS
+========================================== -->
+
+<div class="status-form">
+
+<form
+    method="POST"
+    action="{{ url_for('update_order_status', order_id=order['order_id']) }}"
+>
+
+<label>
+
+<strong>
+Update Order Status:
+</strong>
+
+</label>
+
+
+<select name="status" required>
+
+{% for status in order_statuses %}
+
+<option
+    value="{{ status }}"
+    {% if status == order['status'] %}
+    selected
+    {% endif %}
+>
+
+{{ status }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+
+<button type="submit">
+Update Status
+</button>
+
+</form>
+
+</div>
+
+
+</div>
+
+{% endfor %}
+
+
+{% else %}
+
+<div class="no-orders">
+
+<h2>📦 No Orders Found</h2>
+
+<p>
+There are currently no customer orders.
+</p>
+
+</div>
+
+{% endif %}
+
+
+</div>
+
+</body>
+
+</html>
+```

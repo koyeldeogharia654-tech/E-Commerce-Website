@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>My Wishlist - My E-Commerce Website</title>
+
+<style>
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+    }
+
+    header {
+        background-color: #333;
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+
+    nav {
+        background-color: #444;
+        padding: 15px;
+        text-align: center;
+    }
+
+    nav a {
+        color: white;
+        text-decoration: none;
+        margin: 0 12px;
+        font-weight: bold;
+    }
+
+    nav a:hover {
+        color: #ffcc00;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 1100px;
+        margin: 30px auto;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .wishlist-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 25px;
+    }
+
+    .product {
+        background-color: white;
+        width: 220px;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        text-align: center;
+    }
+
+    .product img {
+        width: 180px;
+        height: 180px;
+        object-fit: contain;
+        border-radius: 8px;
+    }
+
+    .product h3 {
+        margin: 15px 0 10px;
+    }
+
+    .category {
+        color: #777;
+        font-size: 14px;
+    }
+
+    .price {
+        font-size: 20px;
+        font-weight: bold;
+        color: #e67e22;
+        margin: 10px 0;
+    }
+
+    .rating {
+        margin: 10px 0;
+    }
+
+    .button {
+        display: block;
+        text-decoration: none;
+        color: white;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .cart-button {
+        background-color: #28a745;
+    }
+
+    .cart-button:hover {
+        background-color: #218838;
+    }
+
+    .remove-button {
+        background-color: #dc3545;
+    }
+
+    .remove-button:hover {
+        background-color: #c82333;
+    }
+
+    .empty {
+        text-align: center;
+        background-color: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .home-button {
+        display: inline-block;
+        background-color: #007bff;
+        color: white;
+        padding: 12px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 15px;
+    }
+
+    .home-button:hover {
+        background-color: #0056b3;
+    }
+
+</style>
+```
+
+</head>
+
+<body>
+
+<header>
+
+```
+<h1>My E-Commerce Website</h1>
+```
+
+</header>
+
+<nav>
+
+```
+<a href="{{ url_for('home') }}">Home</a>
+
+<a href="{{ url_for('cart') }}">Cart</a>
+
+<a href="{{ url_for('orders') }}">My Orders</a>
+
+<a href="{{ url_for('wishlist') }}">❤️ Wishlist</a>
+
+{% if session.get("username") %}
+
+    <a href="{{ url_for('logout') }}">Logout</a>
+
+{% else %}
+
+    <a href="{{ url_for('login') }}">Login</a>
+
+    <a href="{{ url_for('signup') }}">Sign Up</a>
+
+{% endif %}
+```
+
+</nav>
+
+<div class="container">
+
+```
+<h2>❤️ My Wishlist</h2>
+
+
+{% if wishlist_products %}
+
+    <div class="wishlist-container">
+
+        {% for product in wishlist_products %}
+
+            <div class="product">
+
+                <img
+                    src="{{ url_for('static', filename='images/' + product.image) }}"
+                    alt="{{ product.name }}"
+                >
+
+                <h3>{{ product.name }}</h3>
+
+                <p class="category">
+                    Category: {{ product.category }}
+                </p>
+
+                <p class="price">
+                    ₹{{ product.price }}
+                </p>
+
+                <p class="rating">
+                    ⭐ {{ product.rating }}
+                </p>
+
+
+                <a
+                    href="{{ url_for('add_to_cart', product_id=product.id) }}"
+                    class="button cart-button"
+                >
+                    🛒 Add to Cart
+                </a>
+
+
+                <a
+                    href="{{ url_for('remove_from_wishlist', product_id=product.id) }}"
+                    class="button remove-button"
+                >
+                    ❌ Remove
+                </a>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% else %}
+
+    <div class="empty">
+
+        <h3>Your Wishlist is Empty ❤️</h3>
+
+        <p>You have not added any products to your wishlist yet.</p>
+
+        <a
+            href="{{ url_for('home') }}"
+            class="home-button"
+        >
+            Continue Shopping
+        </a>
+
+    </div>
+
+{% endif %}
+```
+
+</div>
+
+</body>
+
+</html>
